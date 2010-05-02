@@ -9,7 +9,7 @@ pyproxyfs equivalents you can expect to be able to make a simple
 filesystem using the builtin TestFS class and write tests around that.
 
 For example:
-
+`
   def show_conf_files(dirtolist, filesystem=None):
       from pyproxyfs import Filesystem
       if not filesystem:
@@ -19,12 +19,12 @@ For example:
       cfgpat = re.compile(".*\\.cfg$")
       cfg_files = [fn for fn in files if cfgpat.match(fn)]
       return cfg_files
-
+`
 
 this might be your application code.
 
 You could then test it relatively simply:
-
+`
   def test_show_conf_files():
       """
     >>> test_show_conf_files()
@@ -38,7 +38,7 @@ You could then test it relatively simply:
           "somedir/run.py": ""
           })
       return show_conf_files("somedir", filesystem=fs)
-
+`
 
 ## Limitations
 
