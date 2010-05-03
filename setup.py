@@ -5,7 +5,7 @@ from distutils.core import setup
 classifiers = [
     'Development Status :: 3 - Alpha',
     'Intended Audience :: Developers',
-    'License :: OSI Approved :: Python Software Foundation License',
+    'License :: OSI Approved :: GNU General Public License (GPL)',
     'Operating System :: OS Independent',
     'Programming Language :: Python',
     'Topic :: System :: Filesystems',
@@ -13,7 +13,7 @@ classifiers = [
 
 setup(
     name = "PyProxyFS",
-    version = "0.1",
+    version = "0.1.1",
     description = "Simple filesystem abstraction",
     long_description = """A proxy filesystem interface with a native
 filesystem implementation and a very simple test in-memory filesystem.""",
