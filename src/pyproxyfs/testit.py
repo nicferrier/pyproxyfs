@@ -16,7 +16,7 @@
 
 from pyproxyfs import TestFS
 
-def testfs():
+def testfs(*args):
     """
     >>> testfs().listdir(".")
     ['f1', 'f2', 'd1']
@@ -26,13 +26,22 @@ def testfs():
     ['f2', 'g1', 'd1']
     >>> testfs().open("f1").read()
     'hello world!!!'
+    >>> testfs().rename("f1", "g1").open("g1").read()
+    'hello world!!!'
+    >>> testfs("contextopen", "f1").read()
+    'hello world!!!'
     """
-    return TestFS({
+    testfs = TestFS({
             "f1": "hello world!!!",
             "f2": "",
             "d1/f1": "",
             "d1/f2": "",
             })
+    if args and args[0] == "contextopen":
+        with testfs.open(args[1]) as fd:
+            return fd
+    else:
+        return testfs
             
 if __name__ == "__main__":
     import doctest

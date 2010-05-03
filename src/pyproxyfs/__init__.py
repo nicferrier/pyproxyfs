@@ -64,7 +64,7 @@ class TestFS(Filesystem):
         obj = d
         class grd():
             def __enter__(self):
-                return  obj
+                return  self
             def __exit__(self, type, values, traceback):
                 pass
             def read(self):
