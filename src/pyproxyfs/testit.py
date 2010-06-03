@@ -30,6 +30,8 @@ def testfs(*args):
     'hello world!!!'
     >>> testfs("contextopen", "f1").read()
     'hello world!!!'
+    >>> testfs().glob("*f*")
+    ['d1/f1', 'd1/f2', 'f1', 'f2']
     """
     testfs = TestFS({
             "f1": "hello world!!!",

@@ -30,6 +30,14 @@ class Filesystem(object):
     def open(self, path, mode="r"):
         return open(path, mode)
 
+    def iglob(self, path):
+        import glob
+        return glob.iglob(path)
+
+    def glob(self, path):
+        return list(self.iglob(path))
+
+
 def _mergedict(a,b):
     """Recusively merge the 2 dicts.
 
@@ -46,6 +54,8 @@ def _mergedict(a,b):
 
 class TestFS(Filesystem):
     def __init__(self, data):
+        super(TestFS, self).__init__()
+        self.paths = data
         self.files = {}
         # Make the path: object into a nested dict setup
         for name,data in data.iteritems():
@@ -102,5 +112,11 @@ class TestFS(Filesystem):
 
     def listdir(self, path):
         return list(self._listdir(path))
+
+    def iglob(self, path):
+        import fnmatch
+        for p in sorted(self.paths.keys()):
+            if fnmatch.fnmatch(p, path):
+                yield p
 
 # End
