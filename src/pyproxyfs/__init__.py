@@ -27,7 +27,7 @@ class Filesystem(object):
     def listdir(self, path):
         return os.listdir(path)
 
-    def open(self, path, mode=None):
+    def open(self, path, mode="r"):
         return open(path, mode)
 
 def _mergedict(a,b):
