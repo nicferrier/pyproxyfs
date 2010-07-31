@@ -32,12 +32,17 @@ def testfs(*args):
     'hello world!!!'
     >>> testfs().glob("*f*")
     ['d1/f1', 'd1/f2', 'f1', 'f2']
+    >>> testfs().isdir("d1")
+    True
+    >>> testfs().isdir("d1/f1")
+    False
     """
     testfs = TestFS({
             "f1": "hello world!!!",
             "f2": "",
-            "d1/f1": "",
-            "d1/f2": "",
+            "d1": "",
+            "d1/f1": "# empty file",
+            "d1/f2": "/* empty file */",
             })
     if args and args[0] == "contextopen":
         with testfs.open(args[1]) as fd:
@@ -46,6 +51,8 @@ def testfs(*args):
         return testfs
             
 if __name__ == "__main__":
+    import sys
+    print sys.path
     import doctest
     doctest.testmod()
 

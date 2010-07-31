@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import os.path
 
 class Filesystem(object):
     """Base filesystem interface also the base implementation.
@@ -37,19 +38,25 @@ class Filesystem(object):
     def glob(self, path):
         return list(self.iglob(path))
 
+    def exists(self, path):
+        return os.path.exists(path)
 
-def _mergedict(a,b):
+    def isdir(self, path):
+        return os.path.isdir(path)
+
+
+def _mergedict(a, b):
     """Recusively merge the 2 dicts.
 
     Destructive on argument 'a'.
     """
-    def mergedict_(t, d):
-        for p, d1 in d.iteritems():
-            if p in t:
-                mergedict_(t[p], d1)
-            else:
-                t[p] = d1
-    mergedict_(a, b)
+    for p, d1 in b.iteritems():
+        if p in a:
+            if d1 == "":
+                continue
+            _mergedict(a[p], d1)
+        else:
+            a[p] = d1
     return a
 
 class TestFS(Filesystem):
@@ -118,5 +125,29 @@ class TestFS(Filesystem):
         for p in sorted(self.paths.keys()):
             if fnmatch.fnmatch(p, path):
                 yield p
+
+    def exists(self, path):
+        try:
+            self.paths[path]
+        except KeyError:
+            return False
+        else:
+            return True
+
+    def isdir(self, path):
+        """This works by pure convention.
+
+        You must declare a path entry for the dir that has no content:
+
+           "/home/nic/projects/special": "",
+           "/home/nic/projects/special/file.c": "#include <stdio.h>",
+
+        "/home/nic/projects/special" will be considered a directory,
+        whereas "/home/nic/projects/special/file.c" will not.
+        """
+        if self.exists(path):
+            content = self.paths[path]
+            return content == ""
+        return False
 
 # End
