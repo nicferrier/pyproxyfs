@@ -25,6 +25,9 @@ class Filesystem(object):
     def rename(self, oldpath, newpath):
         os.rename(oldpath, newpath)
 
+    def remove(self, path):
+        os.remove(path)
+
     def listdir(self, path):
         return os.listdir(path)
 
@@ -67,6 +70,8 @@ class TestFS(Filesystem):
         # Make the path: object into a nested dict setup
         for name,data in data.iteritems():
             paths = name.split("/")
+            if paths[0] == "":
+                paths = paths[1:]
             d = {}
             d[paths[-1]] = data
             for p in reversed(paths[:-1]):
@@ -75,8 +80,12 @@ class TestFS(Filesystem):
 
     def open(self, path, mode=None):
         path = path.split("/")
+        if path[0] == "":
+            path = path[1:]
         d = self.files
         for p in path:
+            if not p:
+                continue
             d = d[p]
         obj = d
         class grd():
@@ -90,6 +99,8 @@ class TestFS(Filesystem):
 
     def rename(self, old, new):
         path = old.split("/")
+        if path[0] == "":
+            path = path[1:]
         d = self.files
         lastd = None
         for p in path:
@@ -104,13 +115,30 @@ class TestFS(Filesystem):
             d = { p: d }
         _mergedict(self.files, d)
         return self
-        
+
+    def remove(self, path):
+        """Deletes just the end point"""
+        def _path_find(path_parts, fs):
+            for p,f in fs.iteritems():
+                if p == path_parts[0]:
+                    if len(path_parts) == 1:
+                        del fs[p]
+                        return
+                    else:
+                        return _path_find(path_parts[1:], f)
+            raise KeyError()
+
+        pt = path.split("/")
+        return _path_find(pt if pt[0] != "" else pt[1:], self.files)
+
     def _listdir(self, path):
         if path == ".":
             for i in self.files:
                 yield i
         else:
             paths = path.split("/")
+            if paths[0] == "":
+                paths = paths[1:]
             d = self.files
             for p in paths:
                 d = d[p]
@@ -126,28 +154,41 @@ class TestFS(Filesystem):
             if fnmatch.fnmatch(p, path):
                 yield p
 
+    def _path(self, path):
+        """Functional/recursive path finder.
+
+        Raises KeyError if the path is not found
+        """
+        def _path_find(path_parts, fs):
+            for p,f in fs.iteritems():
+                if p == path_parts[0]:
+                    if len(path_parts) == 1:
+                        return f
+                    else:
+                        return _path_find(path_parts[1:], f)
+            raise KeyError()
+
+        pt = path.split("/")
+        return _path_find(pt if pt[0] != "" else pt[1:], self.files)
+
     def exists(self, path):
+        """Functional (recursive) exists on the path structures"""
         try:
-            self.paths[path]
+            self._path(path)
         except KeyError:
             return False
         else:
             return True
 
     def isdir(self, path):
-        """This works by pure convention.
+        """Is the path a directory?
 
-        You must declare a path entry for the dir that has no content:
-
-           "/home/nic/projects/special": "",
-           "/home/nic/projects/special/file.c": "#include <stdio.h>",
-
-        "/home/nic/projects/special" will be considered a directory,
-        whereas "/home/nic/projects/special/file.c" will not.
+        A path is a directory if it holds a dictionary.
         """
         if self.exists(path):
-            content = self.paths[path]
-            return content == ""
+            content = self._path(path)
+            # Not sure this is the best attribute to check for.
+            return hasattr(content, "keys")
         return False
 
 # End
