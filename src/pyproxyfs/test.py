@@ -85,7 +85,7 @@ class FilesystemTest(unittest.TestCase):
 
     def test_status(self):
         self.assert_(self.testfs.isdir("d1"))
-        self.assert_(self.testfs.isdir("d1/f1"))
+        self.assert_(self.testfs.isdir("d1/s1"))
         self.assert_(self.testfs.exists("d1/f1"))
         self.assert_(self.testfs.exists("d1"))
         self.assert_(self.testfs.exists("d1/s1/f3"))
