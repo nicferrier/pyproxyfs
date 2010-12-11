@@ -65,7 +65,11 @@ def _mergedict(a, b):
 class TestFS(Filesystem):
     def __init__(self, data):
         super(TestFS, self).__init__()
+        # 'paths' is pretty much what is passed in
         self.paths = data
+        # 'files' is the decomposed paths -> json structure
+        # eg: "/a/b" is stored as a key "a" with a dict containing a key "b":
+        #   {"a": {"b": "filecontent"}}
         self.files = {}
         # Make the path: object into a nested dict setup
         for name,data in data.iteritems():
@@ -109,6 +113,8 @@ class TestFS(Filesystem):
         del lastd[p]
         obj = d
         np = new.split("/")
+        if np[0] == "":
+            np = np[1:]
         d = {}
         d[np[-1]] = obj
         for p in reversed(np[:-1]):

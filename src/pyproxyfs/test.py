@@ -82,6 +82,7 @@ class FilesystemTest(unittest.TestCase):
                 "d1/f1": "# empty file",
                 "d1/f2": "/* empty file */",
                 "d1/s1/f3": "# empty file",
+                "d1/s3/f3": "# empty file",
                 "d2/f1": "# another empty file",
                 })
         renametestfs.rename("d1/f2", "d2/different.3")
@@ -89,6 +90,12 @@ class FilesystemTest(unittest.TestCase):
             renametestfs.listdir("d2") == ['f1', 'different.3'],
             renametestfs.listdir("d2")
             )
+        renametestfs.rename("d1/s1/f3", "d1/s3/aa")
+        self.assert_(
+            renametestfs.listdir("d1/s3") == ['aa', 'f3'],
+            renametestfs.listdir("d1/s3")
+            )
+
 
 
     def test_open(self):
