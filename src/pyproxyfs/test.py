@@ -64,6 +64,33 @@ class FilesystemTest(unittest.TestCase):
             self.testfs.listdir(".") == ['f2', 'g1', 'd1']
             )
 
+    def test_rename_into_dir(self):
+        self.testfs.rename("f1", "d1/g1")
+        self.assert_(
+            self.testfs.listdir(".") == ['f2', 'd1']
+            )
+        self.assert_(
+            self.testfs.listdir("d1") == ['f1', 's1', 'f2', 'g1'],
+            self.testfs.listdir("d1")
+            )
+
+    def test_rename_across_dirs(self):
+        renametestfs = TestFS({
+                "f1": "hello world!!!",
+                "f2": "",
+                "d1": "",
+                "d1/f1": "# empty file",
+                "d1/f2": "/* empty file */",
+                "d1/s1/f3": "# empty file",
+                "d2/f1": "# another empty file",
+                })
+        renametestfs.rename("d1/f2", "d2/different.3")
+        self.assert_(
+            renametestfs.listdir("d2") == ['f1', 'different.3'],
+            renametestfs.listdir("d2")
+            )
+
+
     def test_open(self):
         self.assert_(
             self.testfs.open("f1").read() == 'hello world!!!'
