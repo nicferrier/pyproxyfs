@@ -99,6 +99,17 @@ class TestFS(Filesystem):
                 pass
             def read(self):
                 return obj
+            def readline(self, size=-1):
+                if not getattr(self, "lineno", False):
+                    setattr(self, "lineno", 0)
+                lines = obj.split("\n")
+                if self.lineno == len(lines):
+                    return "\n"
+                if self.lineno > len(lines):
+                    raise IOError()
+                line = lines[self.lineno]
+                self.lineno = self.lineno + 1
+                return "%s\n" % line
         return grd()
 
     def rename(self, old, new):
