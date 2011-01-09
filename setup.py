@@ -13,7 +13,7 @@ classifiers = [
 
 setup(
     name = "PyProxyFS",
-    version = "0.5",
+    version = "0.6",
     description = "Simple filesystem abstraction",
     long_description = """A proxy filesystem interface with a native
 filesystem implementation and a very simple test in-memory filesystem.""",
