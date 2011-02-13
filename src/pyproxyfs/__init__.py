@@ -55,7 +55,7 @@ def _mergedict(a, b):
     """
     for p, d1 in b.iteritems():
         if p in a:
-            if d1 == "":
+            if not isinstance(d1, dict):
                 continue
             _mergedict(a[p], d1)
         else:
@@ -121,7 +121,9 @@ class TestFS(Filesystem):
         for p in path:
             lastd = d
             d = d[p]
+
         del lastd[p]
+
         obj = d
         np = new.split("/")
         if np[0] == "":

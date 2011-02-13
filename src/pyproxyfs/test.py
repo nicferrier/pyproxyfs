@@ -79,24 +79,34 @@ class FilesystemTest(unittest.TestCase):
                 "f1": "hello world!!!",
                 "f2": "",
                 "d1": "",
-                "d1/f1": "# empty file",
+                "d1/f1": "# empty bash file",
                 "d1/f2": "/* empty file */",
-                "d1/s1/f3": "# empty file",
+                "d1/s1/f3": "# empty python file",
+                "d1/s1/bb": "# empty bash file",
                 "d1/s3/f3": "# empty file",
                 "d2/f1": "# another empty file",
                 })
+
         renametestfs.rename("d1/f2", "d2/different.3")
         self.assert_(
             renametestfs.listdir("d2") == ['f1', 'different.3'],
             renametestfs.listdir("d2")
             )
+        self.assert_(
+            renametestfs.listdir("d1") == ["s3","f1","s1"],
+            renametestfs.listdir("d1")
+            )
+
         renametestfs.rename("d1/s1/f3", "d1/s3/aa")
         self.assert_(
             renametestfs.listdir("d1/s3") == ['aa', 'f3'],
             renametestfs.listdir("d1/s3")
             )
-
-
+        self.assert_(
+            renametestfs.listdir("d1/s1") == ["bb"],
+            renametestfs.listdir("d1/s1")
+            )
+        print "\n", renametestfs.files
 
     def test_open(self):
         self.assert_(
