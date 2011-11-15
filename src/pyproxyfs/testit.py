@@ -52,7 +52,7 @@ def testfs(*args):
             
 if __name__ == "__main__":
     import sys
-    print sys.path
+    print(sys.path)
     import doctest
     doctest.testmod()
 

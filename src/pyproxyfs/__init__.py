@@ -53,7 +53,7 @@ def _mergedict(a, b):
 
     Destructive on argument 'a'.
     """
-    for p, d1 in b.iteritems():
+    for p, d1 in b.items():
         if p in a:
             if not isinstance(d1, dict):
                 continue
@@ -72,7 +72,7 @@ class TestFS(Filesystem):
         #   {"a": {"b": "filecontent"}}
         self.files = {}
         # Make the path: object into a nested dict setup
-        for name,data in data.iteritems():
+        for name,data in data.items():
             paths = name.split("/")
             if paths[0] == "":
                 paths = paths[1:]
@@ -138,7 +138,7 @@ class TestFS(Filesystem):
     def remove(self, path):
         """Deletes just the end point"""
         def _path_find(path_parts, fs):
-            for p,f in fs.iteritems():
+            for p,f in fs.items():
                 if p == path_parts[0]:
                     if len(path_parts) == 1:
                         del fs[p]
@@ -179,7 +179,7 @@ class TestFS(Filesystem):
         Raises KeyError if the path is not found
         """
         def _path_find(path_parts, fs):
-            for p,f in fs.iteritems():
+            for p,f in fs.items():
                 if p == path_parts[0]:
                     if len(path_parts) == 1:
                         return f

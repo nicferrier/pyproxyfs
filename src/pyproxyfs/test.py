@@ -106,7 +106,7 @@ class FilesystemTest(unittest.TestCase):
             renametestfs.listdir("d1/s1") == ["bb"],
             renametestfs.listdir("d1/s1")
             )
-        print "\n", renametestfs.files
+        print("\n", renametestfs.files)
 
     def test_open(self):
         self.assert_(
